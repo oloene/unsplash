@@ -4,29 +4,27 @@ import type { PhotoResponseType, Topic, TopicResponseType } from "./types";
 const ACCESS_KEY = "6AvetsP6Us_M4dbY8xvzdwcLRDj1oqsNFr2rmIjeYLs";
 
 export async function getTopics(): Promise<TopicResponseType> {
-    let response: TopicResponseType = {};
+    const res = await fetch("https://api.unsplash.com/topics", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Client-ID ${ACCESS_KEY}`,
+        },
+    });
 
-    try {
-        const res = await fetch("https://api.unsplash.com/topics", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Client-ID ${ACCESS_KEY}`,
-            },
-        });
+    if (res.status !== 200) {
+        console.log({ error: res.statusText }); // monitor in db?
 
-        if (res.status !== 200) {
-            console.log({ error: res.statusText }); // log db?
-
-            response.error = `${res.status} | ${res.statusText}`;
-
-            throw new Error();
-        }
-
-        response.topics = (await res.json()) as Topic[];
-    } catch (_) {}
-
-    return response;
+        return {
+            error: `${res.status} | ${res.statusText}`,
+            topics: [],
+        };
+    } else {
+        return {
+            error: "",
+            topics: await res.json(),
+        };
+    }
 }
 
 const PHOTO_PAGE_SIZE = 20;
@@ -35,40 +33,35 @@ export async function getPhotos(
     topic?: string,
     page?: string
 ): Promise<PhotoResponseType> {
-    let response: PhotoResponseType = {};
+    const _page = page ? parseInt(page) : 1;
 
     const url = topic
-        ? `https://api.unsplash.com/topics/${topic}/photos?per_page=${PHOTO_PAGE_SIZE}&page=${
-              page || 1
-          }`
-        : `https://api.unsplash.com/photos?per_page=20&page=&page=${page || 1}`;
+        ? `https://api.unsplash.com/topics/${topic}/photos?per_page=${PHOTO_PAGE_SIZE}&page=${_page}`
+        : `https://api.unsplash.com/photos?per_page=${PHOTO_PAGE_SIZE}&page=${_page}`;
 
-    try {
-        const res = await fetch(url, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Client-ID ${ACCESS_KEY}`,
-            },
-        });
+    const res = await fetch(url, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Client-ID ${ACCESS_KEY}`,
+        },
+    });
+    const totalItems = parseInt(res.headers.get("X-Total") || "0");
+    const hasMorePages = PHOTO_PAGE_SIZE * _page <= totalItems;
 
-        if (res.status !== 200) {
-            console.log({ error: res.statusText }); // log db?
+    if (res.status !== 200) {
+        console.log({ error: res.statusText }); // monitor in db?
 
-            response.error = `${res.status} | ${res.statusText}`;
-
-            throw new Error();
-        }
-
-        const totalItems = parseInt(res.headers.get("X-Total") || "0");
-        const hasMorePages =
-            PHOTO_PAGE_SIZE * parseInt(page || "1") <= totalItems;
-
-        if (!totalItems || !hasMorePages) response.hasMore = false;
-        else response.hasMore = true;
-
-        response.photos = await res.json();
-    } catch (_) {}
-
-    return response;
+        return {
+            error: `${res.status} | ${res.statusText}`,
+            photos: [],
+            hasMore: hasMorePages,
+        };
+    } else {
+        return {
+            error: "",
+            photos: await res.json(),
+            hasMore: hasMorePages,
+        };
+    }
 }

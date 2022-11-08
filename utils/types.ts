@@ -4,21 +4,21 @@ export type Topic = {
 };
 
 export type TopicResponseType = {
-    topics?: Topic[];
-    error?: string;
+    topics: Topic[];
+    error: string;
 };
 
-type urlKey = "full" | "raw" | "regular" | "small" | "small_s3" | "thumb";
-type url = Record<urlKey, string>;
+type UrlKey = "full" | "raw" | "regular" | "small" | "small_s3" | "thumb";
+type Url = Record<UrlKey, string>;
 
 export type Photo = {
     id: string;
-    urls: url;
+    urls: Url;
     alt_description?: string;
 };
 
 export type PhotoResponseType = {
-    photos?: Photo[];
-    error?: string;
-    hasMore?: boolean;
+    photos: Photo[];
+    error: string;
+    hasMore: boolean;
 };

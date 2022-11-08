@@ -77,8 +77,10 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     const topic = Array.isArray(query.topic) ? query.topic[0] : query.topic;
     const page = Array.isArray(query.page) ? query.page[0] : query.page;
 
-    const photosData: PhotoResponseType = await getPhotos(topic, page);
-    const topicsData: TopicResponseType = await getTopics();
+    const [topicsData, photosData] = await Promise.all([
+        getTopics(),
+        getPhotos(topic, page),
+    ]);
 
     return {
         props: {

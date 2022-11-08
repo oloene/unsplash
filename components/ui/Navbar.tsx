@@ -5,14 +5,6 @@ const navItems = [
         name: "Home",
         path: "/",
     },
-    {
-        name: "License",
-        path: "/",
-    },
-    {
-        name: "Pricing",
-        path: "/",
-    },
 ];
 
 const Navbar = (): JSX.Element => {
