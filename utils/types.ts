@@ -4,8 +4,8 @@ export type Topic = {
 };
 
 export type TopicResponseType = {
-    topics: Topic[];
-    error: string;
+    topics?: Topic[];
+    error?: string;
 };
 
 type urlKey = "full" | "raw" | "regular" | "small" | "small_s3" | "thumb";
@@ -18,7 +18,7 @@ export type Photo = {
 };
 
 export type PhotoResponseType = {
-    photos: Photo[];
-    error: string;
+    photos?: Photo[];
+    error?: string;
     hasMore?: boolean;
 };

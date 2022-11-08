@@ -2,11 +2,11 @@ import Image from "next/image";
 import type { Photo } from "../../utils/types";
 
 type PropTypes = {
-    photos: Photo[];
+    photos?: Photo[];
 };
 
 const PhotoGrid = ({ photos }: PropTypes): JSX.Element => {
-    if (photos.length === 0) {
+    if (!photos || photos?.length === 0) {
         return (
             <div className="my-10 text-center text-xl font-bold">
                 No photos found

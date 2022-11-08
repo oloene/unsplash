@@ -4,7 +4,7 @@ import type { PhotoResponseType, Topic, TopicResponseType } from "./types";
 const ACCESS_KEY = "6AvetsP6Us_M4dbY8xvzdwcLRDj1oqsNFr2rmIjeYLs";
 
 export async function getTopics(): Promise<TopicResponseType> {
-    let response = {} as TopicResponseType;
+    let response: TopicResponseType = {};
 
     try {
         const res = await fetch("https://api.unsplash.com/topics", {
@@ -35,7 +35,7 @@ export async function getPhotos(
     topic?: string,
     page?: string
 ): Promise<PhotoResponseType> {
-    let response = {} as PhotoResponseType;
+    let response: PhotoResponseType = {};
 
     const url = topic
         ? `https://api.unsplash.com/topics/${topic}/photos?per_page=${PHOTO_PAGE_SIZE}&page=${

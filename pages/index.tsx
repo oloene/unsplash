@@ -74,11 +74,11 @@ const Home = ({ topicsData, photosData }: PropTypes): JSX.Element => {
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-    const topicsData = (await getTopics()) as TopicResponseType;
-    const photosData = (await getPhotos(
-        query?.topic as string,
-        query?.page as string
-    )) as PhotoResponseType;
+    const topic = Array.isArray(query.topic) ? query.topic[0] : query.topic;
+    const page = Array.isArray(query.page) ? query.page[0] : query.page;
+
+    const photosData: PhotoResponseType = await getPhotos(topic, page);
+    const topicsData: TopicResponseType = await getTopics();
 
     return {
         props: {
