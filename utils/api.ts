@@ -41,7 +41,7 @@ export async function getPhotos(
         ? `https://api.unsplash.com/topics/${topic}/photos?per_page=${PHOTO_PAGE_SIZE}&page=${
               page || 1
           }`
-        : "https://api.unsplash.com/photos?per_page=20";
+        : `https://api.unsplash.com/photos?per_page=20&page=&page=${page || 1}`;
 
     try {
         const res = await fetch(url, {
